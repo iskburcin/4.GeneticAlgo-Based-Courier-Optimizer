@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Genetic Algorithm Route Planner</title>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5dM1VfqsgYBQyx4cejfkeS2GzLuYBm4Q&callback=initMap&libraries=&v=weekly"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5dM1VfqsgYBQyx4cejfkeS2GzLuYBm4Q&callback=initMap&v=weekly&libraries=marker"
+      defer
+    ></script>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <h1>Genetic Algorithm Route Planner</h1>
+
+    <!-- Form for Destinations -->
+    <div id="mapSection">
+      <div id="destinationForm" class="hidden">
+        <input
+          type="text"
+          id="destinationName"
+          placeholder="Enter the Destination Name"
+        /><br />
+        <div class="set">
+          <input
+            type="text"
+            id="address"
+            placeholder="Enter the Destination Address"
+          /><br />
+          <button id="selectFromMapBtn" onclick="initMap()">
+            Select from Map
+          </button>
+        </div>
+        <div style="display: flex; justify-content: space-around">
+          <div class="check-boxes set">
+            <label for="isStart" class="check-box">Is Start Point?</label>
+            <div style="width: 25px"></div>
+            <input type="checkbox" class="toggle-box" id="isStart" />
+          </div>
+          <div class="check-boxes set">
+            <label for="isEnd" class="check-box">Is End Point?</label>
+            <div style="width: 25px"></div>
+            <input type="checkbox" id="isEnd" class="toggle-box" />
+          </div>
+        </div>
+      </div>
+      <div class="set">
+        <button id="saveDestinationBtn" class="hidden">Save Destination</button>
+        <button id="addDestinationBtn">Add Destination</button>
+        <button id="showDestinationsBtn" class="hidden">
+          Show All Destinations
+        </button>
+        <button id="endSelectionMap" class="hidden">Finish Selection</button>
+      </div>
+    </div>
+    <div id="destinationList" class="hidden">
+      <h3>Destinations List:</h3>
+      <div class="destination-list"></div>
+    </div>
+    <div id="map" class="hidden"></div>
+
+    <!-- Form for algorithm parameters -->
+    <div id="algoSection" class="hidden">
+      <h2 style="margin: 2% 0">Algorithm Parameters</h2>
+      <hr style="margin: 2% 0" />
+
+      <form id="algorithmParams">
+        <div class="set">
+          <input
+            type="number"
+            name="popSize"
+            id="popSize"
+            placeholder="Enter the Population Size"
+            required
+            style="width: 200px"
+          />
+          <label for="selectionType">Selection Type:</label>
+          <div class="radio-inputs">
+            <label class="radio">
+              <input
+                type="radio"
+                name="selectionType"
+                value="tournament"
+                checked=""
+              />
+              <span class="name">Tournament</span>
+            </label>
+            <label class="radio">
+              <input type="radio" name="selectionType" value="roulette" />
+              <span class="name">Roulette</span>
+            </label>
+          </div>
+        </div>
+        <hr style="margin: 2% 0" />
+
+        <div class="set">
+          <div class="check-boxes set">
+            <label for="toggleCrossover" class="check-box"
+              >Enable Crossover</label
+            >
+            <div style="width: 25px"></div>
+            <input
+              type="checkbox"
+              name="isCrossOver"
+              id="toggleCrossover"
+              class="toggle-box"
+            />
+          </div>
+          <div id="crossoverOptions" class="hidden">
+            <div class="radio-inputs">
+              <label class="radio">
+                <input type="radio" name="crossoverType" value="single" />
+                <span class="name">Single Point</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="crossoverType" value="multi" />
+                <span class="name">Multi Point</span>
+              </label>
+            </div>
+            <input
+              type="number"
+              step="0.01"
+              id="crossoverRate"
+              name="crossoverRate"
+              placeholder="Enter the Crossover Rate"
+            />
+          </div>
+        </div>
+        <hr style="margin: 2% 0" />
+
+        <div class="set">
+          <div class="check-boxes set">
+            <label for="toggleMutation" class="check-box"
+              >Enable Mutation</label
+            >
+            <div style="width: 25px"></div>
+            <input
+              name="isMutation"
+              type="checkbox"
+              id="toggleMutation"
+              class="toggle-box"
+            />
+          </div>
+          <div id="mutationOptions" class="hidden">
+            <div class="radio-inputs">
+              <label class="radio">
+                <input
+                  type="checkbox"
+                  name="mutationType"
+                  value="cityChange"
+                  checked
+                />
+                <span class="name">City Change</span>
+              </label>
+              <label class="radio">
+                <input
+                  type="checkbox"
+                  name="mutationType"
+                  value="routeChange"
+                />
+                <span class="name">Route Change</span>
+              </label>
+            </div>
+            <input
+              type="number"
+              step="0.01"
+              id="mutationRate"
+              name="mutationRate"
+              placeholder="Enter the Mutation Rate"
+            />
+          </div>
+        </div>
+        <hr style="margin: 2% 0" />
+
+        <div class="set">
+          Stop Conditions:
+          <div class="radio-inputs">
+            <label class="radio">
+              <input
+                type="radio"
+                name="stopCondition"
+                value="maxGeneration"
+                checked=""
+              />
+              <span class="name">Max Generation</span>
+            </label>
+            <label class="radio">
+              <input
+                type="radio"
+                name="stopCondition"
+                value="satisfactorySolution"
+              />
+              <span class="name">Satisfactory Solution</span>
+            </label>
+            <label class="radio">
+              <input type="radio" name="stopCondition" value="noImprovement" />
+              <span class="name">No Improvement</span>
+            </label>
+          </div>
+        </div>
+        <button type="button" onclick="submitData()">Submit</button>
+      </form>
+    </div>
+
+    <div id="results" class="hidden">
+      <button id="show-stats">Show Statistics Table</button>
+      <button id="show-map">Show on Map</button>
+    </div>
+    <script src="/script.js"></script>
+  </body>
+</html>

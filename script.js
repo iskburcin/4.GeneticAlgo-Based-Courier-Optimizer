@@ -227,7 +227,7 @@ function drawRoute(route, color) {
     const coordinates = route.map(point => ({ lat: point.lat, lng: point.lng }));
     let map = new google.maps.Map($('map'), {
         streetViewControl: false,
-        zoom: 6,
+        zoom: 10,
         center: coordinates[1],
     });
 

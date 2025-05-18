@@ -9,6 +9,24 @@ app = Flask(__name__)
 CORS(app)
 
 
+@app.route("/")
+def home():
+    return """
+    <html>
+        <head>
+            <title>Flask API</title>
+        </head>
+        <body style="font-family: Arial; text-align: center; padding-top: 100px;">
+            <h1>🚀 Flask API Çalışıyor!</h1>
+            <p>Bağlantı başarılı. Backend'e başarıyla ulaşıldı.</p>
+            <p>Kuriye konumlarını göndermeye başlayabilirsiniz.</p>
+            <p>"/submit" route ile post atman yeterli 🤗</p>
+            <small>Burçin IŞIK sunar</small>
+        </body>
+    </html>
+    """
+
+
 @app.route("/submit", methods=["POST"])
 def process_data():
     data = request.json
@@ -65,4 +83,8 @@ def generate_graph(routes):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5501)
+    # app.run(debug=True, port=5501)
+    import os
+
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)

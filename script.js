@@ -202,8 +202,9 @@ async function submitData() {
     // Handle Stop Condition
     algoData.stopCondition = formData.get('stopCondition');
     const jsonData = { algoData: algoData, routeData: destinations }
+    console.log(JSON.stringify(jsonData))
     // Send data to Flask backend
-    fetch('http://127.0.0.1:5501/submit', {
+    fetch('https://four-geneticalgo-based-courier-optimizer.onrender.com/submit', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

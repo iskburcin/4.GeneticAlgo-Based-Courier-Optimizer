@@ -170,7 +170,7 @@ class GeneticAlgorithm:
         if not self.mutation:
             return
 
-        mutation_rate = self.mutation["rate"]
+        mutation_rate = int(self.mutation["rate"])
         for individual in population:
             if random.random() < mutation_rate:
                 idx1, idx2 = random.sample(range(len(self.routes)), 2)
